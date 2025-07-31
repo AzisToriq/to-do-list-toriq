@@ -12,11 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('tasks', function (Blueprint $table) {
-            if (!Schema::hasColumn('tasks', 'user_id')) {
-                $table->foreignId('user_id')
-                      ->nullable() // Biar data lama gak error
-                      ->constrained()
-                      ->onDelete('cascade'); // Kalau user dihapus, task ikut terhapus
+            if (!Schema::hasColumn('tasks', 'deadline')) {
+                $table->dateTime('deadline')->nullable()->after('description');
             }
         });
     }
@@ -27,9 +24,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tasks', function (Blueprint $table) {
-            if (Schema::hasColumn('tasks', 'user_id')) {
-                $table->dropForeign(['user_id']);
-                $table->dropColumn('user_id');
+            if (Schema::hasColumn('tasks', 'deadline')) {
+                $table->dropColumn('deadline');
             }
         });
     }
